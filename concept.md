@@ -37,8 +37,8 @@ _Audio_
 _Language_
 * Deutsch
 * English
-* French
-* Italian
+* Français
+* Italiano
 * Русский
 * ...
 * Back
