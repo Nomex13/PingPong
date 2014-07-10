@@ -18,9 +18,22 @@ _Play_
 * AI vs AI
 * Back
 
+_Pause_
+* Resume
+* Options
+* Highscores
+* End
+
 _Options_
+* Gameplay
 * Video
 * Audio
+* Language
+* Back
+
+_Gameplay_
+* 
+* AI Strength
 * Language
 * Back
 
