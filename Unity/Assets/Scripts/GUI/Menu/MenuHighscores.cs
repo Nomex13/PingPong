@@ -3,16 +3,6 @@ using System.Collections;
 
 public class MenuHighscores : Menu
 {
-	void Start()
-	{
-		;
-	}
-
-	void Update()
-	{
-		;
-	}
-
 	void OnClickPlayerVsPlayer()
 	{
 		Global.Gameplay.GameSet(2);
@@ -39,6 +29,13 @@ public class MenuHighscores : Menu
 
 	void OnClickBack()
 	{
-		Global.MenuManager.ShowMenuMain();
+		if (Global.StateManager.GameState == GameState.PAUSED)
+		{
+			Global.MenuManager.ShowMenuPause();
+		}
+		else
+		{
+			Global.MenuManager.ShowMenuMain();
+		}
 	}
 }

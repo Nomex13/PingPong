@@ -1,4 +1,4 @@
-//----------------------------------------------
+﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
 // Copyright © 2011-2014 Tasharen Entertainment
 //----------------------------------------------
@@ -369,10 +369,10 @@ static public class NGUIMenu
 	[MenuItem("NGUI/Tween/Transform", true)]
 	static bool Tween8a () { return (Selection.activeGameObject != null); }
 
-	[MenuItem("NGUI/Tween/Volume", false, 8)]
+	[MenuItem("NGUI/Tween/MusicVolume", false, 8)]
 	static void Tween9 () { if (Selection.activeGameObject != null) Selection.activeGameObject.AddMissingComponent<TweenVolume>(); }
 
-	[MenuItem("NGUI/Tween/Volume", true)]
+	[MenuItem("NGUI/Tween/MusicVolume", true)]
 	static bool Tween9a () { return (Selection.activeGameObject != null) && (Selection.activeGameObject.GetComponent<AudioSource>() != null); }
 
 	[MenuItem("NGUI/Tween/Field of View", false, 8)]

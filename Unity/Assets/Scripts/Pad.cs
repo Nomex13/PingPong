@@ -22,17 +22,17 @@ public class Pad : MonoBehaviour
 
 	}
 
-	void OnTriggerEnter(Collider param_other)
-	{
-		field_isHit = true;
-		Debug.Log("Pad hit");
-	}
-	void OnTriggerExit(Collider param_other)
-	{
-		field_isHit = false;
-	}
-	public bool IsHit()
-	{
-		return field_isHit;
-	}
+	//void OnTriggerEnter(Collider param_other)
+	//{
+	//	field_isHit = true;
+	//	Debug.Log("Pad hit");
+	//}
+	//void OnTriggerExit(Collider param_other)
+	//{
+	//	field_isHit = false;
+	//}
+	//public bool IsHit()
+	//{
+	//	return field_isHit;
+	//}
 }

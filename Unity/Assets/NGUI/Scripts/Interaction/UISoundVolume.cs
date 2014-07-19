@@ -1,4 +1,4 @@
-//----------------------------------------------
+﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
 // Copyright © 2011-2014 Tasharen Entertainment
 //----------------------------------------------
@@ -11,7 +11,7 @@ using UnityEngine;
 /// </summary>
 
 [RequireComponent(typeof(UISlider))]
-[AddComponentMenu("NGUI/Interaction/Sound Volume")]
+[AddComponentMenu("NGUI/Interaction/Sound MusicVolume")]
 public class UISoundVolume : MonoBehaviour
 {
 	UISlider mSlider;

@@ -3,25 +3,18 @@ using System.Collections;
 
 public class MenuPause : Menu
 {
-	void Start()
-	{
-		;
-	}
-	
-	void Update()
-	{
-		;
-	}
-
 	void OnClickResume()
 	{
 		//Global.Gameplay.GameSet(2);
 		//Global.Gameplay.GameStart();
 		//Global.HudManager.ShowHudMain();
 		//Global.MenuManager.HideMenuAll();
-		Global.Gameplay.GameResume();
-		Global.HudManager.ShowHudMain();
-		Global.MenuManager.HideMenuAll();
+
+		//Global.Gameplay.GameResume();
+		//Global.HudManager.ShowHudMain();
+		//Global.MenuManager.HideMenuAll();
+
+		Global.StateManager.GameResume();
 	}
 
 	void OnClickOptions()
@@ -36,8 +29,10 @@ public class MenuPause : Menu
 
 	void OnClickEnd()
 	{
-		Global.Gameplay.GameStop();
-		Global.HudManager.HideHudAll();
-		Global.MenuManager.ShowMenuMain();
+		//Global.Gameplay.GameStop();
+		//Global.HudManager.HideHudAll();
+		//Global.MenuManager.ShowMenuMain();
+
+		Global.StateManager.GameStop();
 	}
 }

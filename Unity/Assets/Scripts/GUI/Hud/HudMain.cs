@@ -54,28 +54,6 @@ public class HudMain : Hud
 	//    field_screenOrientaion = Screen.orientation;
 	//}
 
-	void OnClickCenter()
-	{
-		Global.Gameplay.GamePause();
-		Global.HudManager.HideHudAll();
-		Global.MenuManager.ShowMenuPause();
-	}
-	void OnSlideLeft(float param_position)
-	{
-		Global.Gameplay.SetPadOnePosition(param_position);
-	}
-	void OnSlideRight(float param_position)
-	{
-		Global.Gameplay.SetPadTwoPosition(param_position);
-	}
-	void OnSlideTop(float param_position)
-	{
-		Global.Gameplay.SetPadOnePosition(param_position);
-	}
-	void OnSlideBottom(float param_position)
-	{
-		Global.Gameplay.SetPadTwoPosition(param_position);
-	}
 
 	public void SetDirection(DirectionEnum param_direction)
 	{
@@ -126,5 +104,29 @@ public class HudMain : Hud
 		SliderTop.Disable();
 		SliderBottom.Disable();
 		ButtonPause.Disable();
+	}
+	void OnClickCenter()
+	{
+		//Global.Gameplay.GamePause();
+		//Global.HudManager.HideHudAll();
+		//Global.MenuManager.ShowMenuPause();
+
+		Global.StateManager.GamePause();
+	}
+	void OnSlideLeft(float param_position)
+	{
+		Global.Gameplay.SetPadOnePosition(param_position);
+	}
+	void OnSlideRight(float param_position)
+	{
+		Global.Gameplay.SetPadTwoPosition(param_position);
+	}
+	void OnSlideTop(float param_position)
+	{
+		Global.Gameplay.SetPadOnePosition(param_position);
+	}
+	void OnSlideBottom(float param_position)
+	{
+		Global.Gameplay.SetPadTwoPosition(param_position);
 	}
 }

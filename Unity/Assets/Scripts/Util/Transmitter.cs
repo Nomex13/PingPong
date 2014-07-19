@@ -10,7 +10,7 @@ public class Transmitter : MonoBehaviour
 	//public int Omg;
 
 	[SerializeField]
-	public List<Reciever> Recievers = new List<Reciever>();
+	public List<Receiver> Receivers = new List<Receiver>();
 
 	// Use this for initialization
 	void Start ()

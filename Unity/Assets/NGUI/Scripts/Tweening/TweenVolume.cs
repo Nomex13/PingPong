@@ -1,4 +1,4 @@
-//----------------------------------------------
+﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
 // Copyright © 2011-2014 Tasharen Entertainment
 //----------------------------------------------
@@ -10,7 +10,7 @@ using UnityEngine;
 /// </summary>
 
 [RequireComponent(typeof(AudioSource))]
-[AddComponentMenu("NGUI/Tween/Tween Volume")]
+[AddComponentMenu("NGUI/Tween/Tween MusicVolume")]
 public class TweenVolume : UITweener
 {
 #if UNITY_3_5

@@ -3,19 +3,9 @@ using System.Collections;
 
 public class MenuOptions : Menu
 {
-	void Start()
+	void OnClickOther()
 	{
-		;
-	}
-
-	void Update()
-	{
-		;
-	}
-
-	void OnClickGameplay()
-	{
-		Global.MenuManager.ShowMenuOptionsGameplay();
+		Global.MenuManager.ShowMenuOptionsOther();
 	}
 
 	void OnClickVideo()
@@ -30,6 +20,13 @@ public class MenuOptions : Menu
 
 	void OnClickBack()
 	{
-		Global.MenuManager.ShowMenuMain();
+		if (Global.StateManager.GameState == GameState.PAUSED)
+		{
+			Global.MenuManager.ShowMenuPause();
+		}
+		else
+		{
+			Global.MenuManager.ShowMenuMain();
+		}
 	}
 }

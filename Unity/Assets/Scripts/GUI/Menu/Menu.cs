@@ -51,12 +51,14 @@ public class Menu : MonoBehaviour
 		}
 	}
 
-	public void Show()
+	public virtual void Show()
 	{
-		gameObject.SetActive(true);
+		NGUITools.SetActive(gameObject, true);
+		//gameObject.SetActive(true);
 	}
-	public void Hide()
+	public virtual void Hide()
 	{
-		gameObject.SetActive(false);
+		NGUITools.SetActive(gameObject, false);
+		//gameObject.SetActive(false);
 	}
 }

@@ -435,7 +435,7 @@ public static class NGUIContextMenu
 			AddMissingItem<TweenTransform>(target, "Tween/Transform");
 
 			if (target.GetComponent<AudioSource>() != null)
-				AddMissingItem<TweenVolume>(target, "Tween/Volume");
+				AddMissingItem<TweenVolume>(target, "Tween/MusicVolume");
 
 			if (target.GetComponent<Camera>() != null)
 			{
