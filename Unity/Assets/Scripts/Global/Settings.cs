@@ -46,7 +46,7 @@ public class Settings : MonoBehaviour
 			}
 			else
 			{
-				string systemLanguage = Util.SystemLanguageToCountryCode(Application.systemLanguage);
+				string systemLanguage = Application.systemLanguage.GetCode();
 				if (field_languages.Contains(systemLanguage))
 				{
 					field_language = systemLanguage;

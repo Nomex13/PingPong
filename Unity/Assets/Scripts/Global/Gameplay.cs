@@ -6,11 +6,16 @@ public class Gameplay : MonoBehaviour
 	private bool field_inited = false;
 
 	public Camera Camera;
+	public Ball Ball;
 	public Pad PadLeft;
 	public Pad PadRight;
 	public Pad PadTop;
 	public Pad PadBottom;
-	public Ball Ball;
+	public GameObject BorderLeft;
+	public GameObject BorderRight;
+	public GameObject BorderTop;
+	public GameObject BorderBottom;
+	private TrailRenderer field_ballTrailRenderer;
 	public float PadPadding;
 
 	[Range(0, 1f)]
@@ -66,6 +71,7 @@ public class Gameplay : MonoBehaviour
 		//Resize();
 		//Rerotate();
 		//GameStop(true);
+		field_ballTrailRenderer = Ball.GetComponent<TrailRenderer>();
 	}
 
 	void Update()
@@ -119,8 +125,11 @@ public class Gameplay : MonoBehaviour
 		}
 	}
 
-	Vector3 MoveBall(GameObject[] param_gameObjects, Vector3 param_source, Vector3 param_destination)
+	bool MoveBall(GameObject[] param_gameObjects, Vector3 param_source, ref Vector3 param_destination, Vector3[] param_points = null)
 	{
+		if (param_points == null)
+			param_points = new Vector3[] { Vector3.zero };
+
 		RaycastHit hitNearest = new RaycastHit();
 		RaycastHit hitTemp;
 		//Vector3 nearestCollisionPosition = Vector3.zero;
@@ -135,13 +144,16 @@ public class Gameplay : MonoBehaviour
 
 		for (int i = 0; i < param_gameObjects.Length; i++)
 		{
-			if (HasCollisionPoint(param_gameObjects[i], param_source, param_destination, out hitTemp))
+			for (int j = 0; j < param_points.Length; j++)
 			{
-				if (!collisionFound || hitTemp.distance < hitNearest.distance)
+				if (HasCollisionPoint(param_gameObjects[i], param_source + param_points[j], param_destination + param_points[j], out hitTemp))
 				{
-					hitNearest = hitTemp;
+					if (!collisionFound || hitTemp.distance < hitNearest.distance)
+					{
+						hitNearest = hitTemp;
+					}
+					collisionFound = true;
 				}
-				collisionFound = true;
 			}
 		}
 
@@ -155,11 +167,13 @@ public class Gameplay : MonoBehaviour
 			//Debug.Log("Original = " + (param_destination - hitNearest.point).x);
 			//Debug.Log("Reflected = " + Vector3.Reflect(param_destination - hitNearest.point, hitNearest.normal).x);
 			//Debug.Log("Normal = " + hitNearest.normal);
-			return destination;//MoveBall(param_gameObjects, hitNearest.point, param_destination);
+			param_destination = destination;
+			MoveBall(param_gameObjects, hitNearest.point, ref param_destination);
+			return true;
 		}
 		else
 		{
-			return param_destination;
+			return collisionFound;
 		}
 
 		//if (HasCollisionPoint(PadLeft.gameObject, param_source, param_destination, ref positionCollisionPoint))
@@ -206,53 +220,64 @@ public class Gameplay : MonoBehaviour
 			Vector3 positionPrevious = Ball.transform.position;
 			Vector3 positionNext = positionPrevious + new Vector3(field_ballDirection.x, field_ballDirection.y, 0).normalized * field_ballSpeed * Time.deltaTime * field_worldWidth;
 
-			GameObject[] pads = new GameObject[]{PadLeft.gameObject, PadRight.gameObject, PadTop.gameObject, PadBottom.gameObject};
-			positionNext = MoveBall(pads, positionPrevious, positionNext);
+			GameObject[] pads = new GameObject[] { PadLeft.gameObject, PadRight.gameObject, PadTop.gameObject, PadBottom.gameObject, BorderLeft, BorderRight, BorderTop, BorderBottom };
+			Vector3 positionNextOriginal = positionNext;
+			Vector3[] points = new Vector3[]
+			{
+				new Vector3( field_ballSize.x / 2f,  field_ballSize.y / 2f, 0),
+				new Vector3(-field_ballSize.x / 2f,  field_ballSize.y / 2f, 0),
+				new Vector3( field_ballSize.x / 2f, -field_ballSize.y / 2f, 0),
+				new Vector3(-field_ballSize.x / 2f, -field_ballSize.y / 2f, 0)
+			};
+			if (MoveBall(pads, positionPrevious, ref positionNext))
+			{
+				Debug.Log("Correction is " + Mathf.Abs(positionNext.x - positionNextOriginal.x));
+			}
 
-			// Top Border
-			if (positionNext.y > field_worldLeftTop.y - field_ballSize.y)
-			{
-				positionNext.y -= (positionNext.y - (field_worldLeftTop.y - field_ballSize.y)) * 2;
-				field_ballDirection.y = -field_ballDirection.y;
-				if (field_gameDirection == DirectionEnum.VERTICAL)
-				{
-					field_ballSpeed = BallInitialSpeed;
-					Global.ScoreManager.PlayerOneScore++;
-				}
-			}
-			// Bottom Border
-			if (positionNext.y < field_worldRightBottom.y + field_ballSize.y)
-			{
-				positionNext.y -= (positionNext.y - (field_worldRightBottom.y + field_ballSize.y)) * 2;
-				field_ballDirection.y = -field_ballDirection.y;
-				if (field_gameDirection == DirectionEnum.VERTICAL)
-				{
-					field_ballSpeed = BallInitialSpeed;
-					Global.ScoreManager.PlayerTwoScore++;
-				}
-			}
-			// Left Border
-			if (positionNext.x < field_worldLeftTop.x + field_ballSize.x)
-			{
-				positionNext.x -= (positionNext.x - (field_worldLeftTop.x + field_ballSize.x)) * 2;
-				field_ballDirection.x = -field_ballDirection.x;
-				if (field_gameDirection == DirectionEnum.HORIZONTAL)
-				{
-					field_ballSpeed = BallInitialSpeed;
-					Global.ScoreManager.PlayerOneScore++;
-				}
-			}
-			// Right Border
-			if (positionNext.x > field_worldRightBottom.x - field_ballSize.x)
-			{
-				positionNext.x -= (positionNext.x - (field_worldRightBottom.x - field_ballSize.x)) * 2;
-				field_ballDirection.x = -field_ballDirection.x;
-				if (field_gameDirection == DirectionEnum.HORIZONTAL)
-				{
-					field_ballSpeed = BallInitialSpeed;
-					Global.ScoreManager.PlayerTwoScore++;
-				}
-			}
+			//// Top Border
+			//if (positionNext.y > field_worldLeftTop.y - field_ballSize.y)
+			//{
+			//	positionNext.y -= (positionNext.y - (field_worldLeftTop.y - field_ballSize.y)) * 2;
+			//	field_ballDirection.y = -field_ballDirection.y;
+			//	if (field_gameDirection == DirectionEnum.VERTICAL)
+			//	{
+			//		field_ballSpeed = BallInitialSpeed;
+			//		Global.ScoreManager.PlayerOneScore++;
+			//	}
+			//}
+			//// Bottom Border
+			//if (positionNext.y < field_worldRightBottom.y + field_ballSize.y)
+			//{
+			//	positionNext.y -= (positionNext.y - (field_worldRightBottom.y + field_ballSize.y)) * 2;
+			//	field_ballDirection.y = -field_ballDirection.y;
+			//	if (field_gameDirection == DirectionEnum.VERTICAL)
+			//	{
+			//		field_ballSpeed = BallInitialSpeed;
+			//		Global.ScoreManager.PlayerTwoScore++;
+			//	}
+			//}
+			//// Left Border
+			//if (positionNext.x < field_worldLeftTop.x + field_ballSize.x)
+			//{
+			//	positionNext.x -= (positionNext.x - (field_worldLeftTop.x + field_ballSize.x)) * 2;
+			//	field_ballDirection.x = -field_ballDirection.x;
+			//	if (field_gameDirection == DirectionEnum.HORIZONTAL)
+			//	{
+			//		field_ballSpeed = BallInitialSpeed;
+			//		Global.ScoreManager.PlayerOneScore++;
+			//	}
+			//}
+			//// Right Border
+			//if (positionNext.x > field_worldRightBottom.x - field_ballSize.x)
+			//{
+			//	positionNext.x -= (positionNext.x - (field_worldRightBottom.x - field_ballSize.x)) * 2;
+			//	field_ballDirection.x = -field_ballDirection.x;
+			//	if (field_gameDirection == DirectionEnum.HORIZONTAL)
+			//	{
+			//		field_ballSpeed = BallInitialSpeed;
+			//		Global.ScoreManager.PlayerTwoScore++;
+			//	}
+			//}
 
 			// Save relative ball position
 			field_ballPositionRelative = new Vector2(positionNext.x / field_worldWidth, positionNext.y / field_worldHeight);
@@ -294,10 +319,19 @@ public class Gameplay : MonoBehaviour
 		Debug.Log("Resized to " + field_screenWidth + "x" + field_screenHeight);
 
 		Ball.transform.localScale = field_ballSize;
+		field_ballTrailRenderer.startWidth = (field_ballSize.x + field_ballSize.y) / 2;
 		PadLeft.transform.localScale = field_padVerticalSize;
 		PadRight.transform.localScale = field_padVerticalSize;
 		PadTop.transform.localScale = field_padHorizontalSize;
 		PadBottom.transform.localScale = field_padHorizontalSize;
+		BorderLeft.transform.position = new Vector3(-(field_worldWidth + field_ballSize.x) / 2, 0, 0);
+		BorderRight.transform.position = new Vector3((field_worldWidth + field_ballSize.x) / 2, 0, 0);
+		BorderTop.transform.position = new Vector3(0, (field_worldHeight + field_ballSize.y) / 2, 0);
+		BorderBottom.transform.position = new Vector3(0, -(field_worldHeight + field_ballSize.y) / 2, 0);
+		BorderLeft.transform.localScale = new Vector3(field_ballSize.x, field_worldHeight + field_ballSize.y, field_ballSize.z);
+		BorderRight.transform.localScale = new Vector3(field_ballSize.x, field_worldHeight + field_ballSize.y, field_ballSize.z);
+		BorderTop.transform.localScale = new Vector3(field_worldWidth + field_ballSize.x, field_ballSize.y, field_ballSize.z);
+		BorderBottom.transform.localScale = new Vector3(field_worldWidth + field_ballSize.x, field_ballSize.y, field_ballSize.z);
 
 		SetPadOnePosition(field_padOnePosition);
 		SetPadTwoPosition(field_padTwoPosition);
@@ -306,13 +340,15 @@ public class Gameplay : MonoBehaviour
 		if (field_screenWidth > field_screenHeight && field_gameDirection != DirectionEnum.HORIZONTAL)
 		{
 			field_gameDirection = DirectionEnum.HORIZONTAL;
-			field_ballPositionRelative = new Vector2(field_ballPositionRelative.y, field_ballPositionRelative.x);
+			field_ballPositionRelative = new Vector2(-field_ballPositionRelative.y, field_ballPositionRelative.x);
+			field_ballDirection = new Vector2(-field_ballDirection.y, field_ballDirection.x);
 			SetBallPosition(field_ballPositionRelative);
 		}
 		if (field_screenWidth < field_screenHeight && field_gameDirection != DirectionEnum.VERTICAL)
 		{
 			field_gameDirection = DirectionEnum.VERTICAL;
-			field_ballPositionRelative = new Vector2(field_ballPositionRelative.y, field_ballPositionRelative.x);
+			field_ballPositionRelative = new Vector2(field_ballPositionRelative.y, -field_ballPositionRelative.x);
+			field_ballDirection = new Vector2(field_ballDirection.y, -field_ballDirection.x);
 			SetBallPosition(field_ballPositionRelative);
 		}
 		ShowPads();
